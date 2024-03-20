@@ -34,7 +34,7 @@ public class ReportCreate {
                 String formattedDate = myDateObj.format(myFormatObj);
 
                 FileWriter myWriter = new FileWriter(newReport);
-                myWriter.write(formattedDate + "\n");
+                myWriter.write("Report create at the following date and time: " + formattedDate + "\n");
 
                 myWriter.write(reportDescription);
                 myWriter.close();
