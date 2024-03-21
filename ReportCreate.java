@@ -1,8 +1,7 @@
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Scanner;
 
 public class ReportCreate {
     public static void CreateFolder(){
@@ -38,15 +37,64 @@ public class ReportCreate {
 
                 myWriter.write(reportDescription);
                 myWriter.close();
-                System.out.println("Scrittura nel file completata con successo.");
+                System.out.println("File created successfully");
             } else {
-                System.out.println("Il report " + reportName + " esiste già.");
+                System.out.println("The report " + reportName + " already exist");
             }
         } catch (IOException e) {
-            System.out.println("Errore durante la creazione del report: " + e.getMessage());
+            System.out.println("Error during report creation " + e.getMessage());
         }
     }
 
+    public static void ReportReader(){
+        String directoryPath = "report";
+        Scanner scanner = new Scanner(System.in);
 
+        // Creating a File object for the directory
+        File directory = new File(directoryPath);
+
+
+        if (directory.isDirectory()) {
+
+            File[] files = directory.listFiles();
+
+
+            System.out.println("Contents of the folder: " + directoryPath);
+            for (File file : files) {
+                System.out.println(file.getName());
+            }
+
+
+            System.out.println("Choose the name of the file you want to read:");
+            String fileName = scanner.nextLine() + ".txt";
+
+            File chosenFile = new File(directory, fileName);
+
+            if (chosenFile.isFile() && chosenFile.exists()) {
+                try (BufferedReader bufferedReader = new BufferedReader(new FileReader(chosenFile))) {
+
+                    System.out.println("Content of the file " + fileName + ":");
+
+                    String line;
+                    while ((line = bufferedReader.readLine()) != null) {
+                        System.out.println(line);
+                    }
+                } catch (IOException e) {
+                    // Handling exceptions if errors occur while reading the file
+                    e.printStackTrace();
+                }
+            } else {
+                System.out.println("The specified file does not exist in the folder.");
+            }
+
+        } else {
+            System.out.println("The specified path is not a directory.");
+        }
+        scanner.close();
     }
+
+
+
+
+}
 

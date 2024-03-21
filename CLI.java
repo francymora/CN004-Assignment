@@ -7,25 +7,29 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 
-public class CLI {
-    public static void main(String[] args) {
-        ReportCreate.CreateFolder();
-        Scanner scanner = new Scanner(System.in);
-        HashMap<Integer, String> dictionary = new HashMap<>();
-        dictionary.put(1, "Ambulance");
-        dictionary.put(2, "Police");
-        dictionary.put(3, "Fireman");
 
+public class CLI {
+
+    static void ListOfService(){
         System.out.println("Hi! What emergency service do you need?");
         System.out.println("You can choose between:");
         System.out.println("1) Ambulance");
         System.out.println("2) Police");
         System.out.println("3) Fireman");
 
-        System.out.println("How many services do you need? (Choose between 1/2/3): ");
-        int numServices = scanner.nextInt();
-
+    }
+    public static HashMap<Integer, String> getDictionary() {
+        HashMap<Integer, String> dictionary = new HashMap<>();
+        dictionary.put(1, "Ambulance");
+        dictionary.put(2, "Police");
+        dictionary.put(3, "Fireman");
+        return dictionary;
+    }
+    public static ArrayList<String> processServiceRequests(Scanner scanner) {
+        HashMap<Integer, String> dictionary = getDictionary();
         ArrayList<String> servicesRequested = null;
+        System.out.println("Enter the number of services you want (between 1 and 3): ");
+        int numServices = scanner.nextInt();
         if (numServices >= 1 && numServices <= 3) {
             System.out.println("You can choose between:");
             for (int i = 1; i <= 3; i++) {
@@ -37,42 +41,72 @@ public class CLI {
                 int serviceRequest = scanner.nextInt();
                 servicesRequested.add(dictionary.get(serviceRequest));
             }
-
-            System.out.println("Services requested:");
-            for (String service : servicesRequested) {
-                System.out.println(service);
-            }
         } else {
             System.out.println("Invalid input. Please choose between 1, 2, or 3.");
         }
-        // Costruzione della stringa dei servizi richiesti
+        return servicesRequested;
+    }
+    public static String buildServicesString(ArrayList<String> servicesRequested) {
         StringBuilder servicesString = new StringBuilder();
         for (int i = 0; i < servicesRequested.size(); i++) {
             if (i > 0) {
-                servicesString.append(", "); // Aggiungi una virgola dopo ogni elemento tranne il primo
+                servicesString.append(", ");
             }
             servicesString.append(servicesRequested.get(i));
+        }
+        return servicesString.toString();
+    }
+
+
+
+    public static void main(String[] args) {
+        ReportCreate.CreateFolder();
+        Scanner scanner = new Scanner(System.in);
+
+        boolean Requests = true;
+        while (Requests) {
+            System.out.println("Do you want to read a report or help someone with a request?(write read for the first option and help for the second)");
+            String options = scanner.nextLine();
+            if (options.toLowerCase().equals("help")) {
+                ListOfService();
+                ArrayList<String> servicesRequested = processServiceRequests(scanner);
+                String servicesString = buildServicesString(servicesRequested);
+
+                scanner.nextLine();
+                System.out.println("Now I need you to tell me your name");
+                String name = scanner.nextLine();
+
+
+                System.out.println("Now I need your last name");
+                String lastname = scanner.nextLine();
+
+
+                System.out.println("I need a little description about your issue");
+                String description = scanner.nextLine();
+
+                Callerinformation callerinformation = new Callerinformation(name, lastname, description);
+                //String report = "The caller: " + callerinformation.getName() + " " + callerinformation.getLastname() + "\n" + "has requested the following services: " + servicesRequested.toString() + ".\nFor the following issue: " + callerinformation.getDescription();
+                String report = "The caller: " + callerinformation.getName() + " " + callerinformation.getLastname() + "\nhas requested the following services: " + servicesString + ".\nFor the following issue: " + callerinformation.getDescription();
+                ReportCreate.generateNextReport(report);
+                System.out.println("Do you want to create another report?(yes or no only)");
+                String response = scanner.nextLine();
+                if (response.toLowerCase().equals("no")) {
+                    Requests = false;
+                } else {
+                    Requests = true;
+
+                }
+            } else {
+                ReportCreate.ReportReader();
+            }
         }
 
 
 
-        scanner.nextLine();
-        System.out.println("Now I need you to tell me your name");
-        String name = scanner.nextLine();
 
-
-        System.out.println("Now I need your last name");
-        String lastname = scanner.nextLine();
-
-
-
-        System.out.println("I need a little description about your issue");
-        String description = scanner.nextLine();
-
-        Callerinformation callerinformation = new Callerinformation(name, lastname, description);
-        //String report = "The caller: " + callerinformation.getName() + " " + callerinformation.getLastname() + "\n" + "has requested the following services: " + servicesRequested.toString() + ".\nFor the following issue: " + callerinformation.getDescription();
-        String report ="The caller: " + callerinformation.getName() + " " + callerinformation.getLastname() + "\nhas requested the following services: " + servicesString.toString() + ".\nFor the following issue: " + callerinformation.getDescription();
-        ReportCreate.generateNextReport(report);
+        System.out.println("Thanks to use our service! Have a nice day");
     }
 }
+
+
 
