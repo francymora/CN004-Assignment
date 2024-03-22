@@ -14,6 +14,7 @@ public class ReportCreate {
         }
     }
     public static void generateNextReport(String reportDescription) {
+        CreateFolder();
         File folder = new File("report");
         File[] files = folder.listFiles();
 
@@ -27,7 +28,7 @@ public class ReportCreate {
 
         try {
             if (newReport.createNewFile()) {
-                System.out.println("Creato il report: " + reportName);
+                System.out.println("Report Created: " + reportName);
                 LocalDateTime myDateObj = LocalDateTime.now();
                 DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
                 String formattedDate = myDateObj.format(myFormatObj);
@@ -46,24 +47,21 @@ public class ReportCreate {
         }
     }
 
-    public static void ReportReader(){
+    public static boolean ReportReader() {
         String directoryPath = "report";
         Scanner scanner = new Scanner(System.in);
+        boolean success = false;
 
-        // Creating a File object for the directory
         File directory = new File(directoryPath);
 
-
-        if (directory.isDirectory()) {
+        if (directory.isDirectory() && directory.exists()) {
 
             File[] files = directory.listFiles();
-
 
             System.out.println("Contents of the folder: " + directoryPath);
             for (File file : files) {
                 System.out.println(file.getName());
             }
-
 
             System.out.println("Choose the name of the file you want to read:");
             String fileName = scanner.nextLine() + ".txt";
@@ -79,18 +77,19 @@ public class ReportCreate {
                     while ((line = bufferedReader.readLine()) != null) {
                         System.out.println(line);
                     }
+                    success = true; // Setting success flag to true
                 } catch (IOException e) {
-                    // Handling exceptions if errors occur while reading the file
+
                     e.printStackTrace();
                 }
             } else {
                 System.out.println("The specified file does not exist in the folder.");
             }
-
         } else {
             System.out.println("The specified path is not a directory.");
         }
         scanner.close();
+        return success;
     }
 
 

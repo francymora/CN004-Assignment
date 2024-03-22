@@ -60,11 +60,12 @@ public class CLI {
 
 
     public static void main(String[] args) {
-        ReportCreate.CreateFolder();
-        Scanner scanner = new Scanner(System.in);
+
+
 
         boolean Requests = true;
         while (Requests) {
+            Scanner scanner = new Scanner(System.in);
             System.out.println("Do you want to read a report or help someone with a request?(write read for the first option and help for the second)");
             String options = scanner.nextLine();
             if (options.toLowerCase().equals("help")) {
@@ -90,14 +91,20 @@ public class CLI {
                 ReportCreate.generateNextReport(report);
                 System.out.println("Do you want to create another report?(yes or no only)");
                 String response = scanner.nextLine();
-                if (response.toLowerCase().equals("no")) {
-                    Requests = false;
-                } else {
-                    Requests = true;
-
-                }
+                Requests = !response.toLowerCase().equals("no");
             } else {
-                ReportCreate.ReportReader();
+                boolean ReportResults = ReportCreate.ReportReader();
+                if (!ReportResults){
+                    System.out.println("There is no report try again when you create a report!");
+                    break;
+
+                }else{
+                    System.out.println("Do you want to create another report?(yes or no only)");
+                    scanner.nextLine();
+                    String response = scanner.nextLine();
+                    Requests = !response.toLowerCase().equals("no");
+                }
+
             }
         }
 
