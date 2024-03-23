@@ -63,12 +63,12 @@ public class CLI {
 
 
 
-        boolean Requests = true;
-        while (Requests) {
+        boolean Requests = false;
+        while (!Requests) {
             Scanner scanner = new Scanner(System.in);
             System.out.println("Do you want to read a report or help someone with a request?(write read for the first option and help for the second)");
             String options = scanner.nextLine();
-            if (options.toLowerCase().equals("help")) {
+            if (options.equalsIgnoreCase("help")){
                 ListOfService();
                 ArrayList<String> servicesRequested = processServiceRequests(scanner);
                 String servicesString = buildServicesString(servicesRequested);
@@ -89,23 +89,23 @@ public class CLI {
                 //String report = "The caller: " + callerinformation.getName() + " " + callerinformation.getLastname() + "\n" + "has requested the following services: " + servicesRequested.toString() + ".\nFor the following issue: " + callerinformation.getDescription();
                 String report = "The caller: " + callerinformation.getName() + " " + callerinformation.getLastname() + "\nhas requested the following services: " + servicesString + ".\nFor the following issue: " + callerinformation.getDescription();
                 ReportCreate.generateNextReport(report);
-                System.out.println("Do you want to create another report?(yes or no only)");
+                System.out.println("Do you want to come back to the main menu?(yes or no only)");
                 String response = scanner.nextLine();
-                Requests = !response.toLowerCase().equals("no");
-            } else {
+                Requests = response.equalsIgnoreCase("no");
+            }else{
                 boolean ReportResults = ReportCreate.ReportReader();
                 if (!ReportResults){
                     System.out.println("There is no report try again when you create a report!");
-                    break;
+                    Requests = true;
 
                 }else{
-                    System.out.println("Do you want to create another report?(yes or no only)");
-                    scanner.nextLine();
+                    System.out.println("Do you want to come back to the main menu?(yes or no only)");
                     String response = scanner.nextLine();
-                    Requests = !response.toLowerCase().equals("no");
+                    Requests = response.equalsIgnoreCase("no");
                 }
 
             }
+
         }
 
 

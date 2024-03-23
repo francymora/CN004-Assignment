@@ -88,7 +88,7 @@ public class ReportCreate {
         } else {
             System.out.println("The specified path is not a directory.");
         }
-        scanner.close();
+
         return success;
     }
 
